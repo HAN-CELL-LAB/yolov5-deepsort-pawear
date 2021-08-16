@@ -1,0 +1,8 @@
+path: ../data
+train: images/train  # train images (relative to 'path') 1
+val: images/valid  # val images (relative to 'path') 
+test: images/test # test images (optional)
+
+nc: 2 # number of classes
+names: ['Paw', 'Eartag']  # class names
+
