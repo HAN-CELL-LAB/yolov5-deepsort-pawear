@@ -35,9 +35,9 @@ def compute_color_for_id(label):
 
 
 def detect(opt):
-    out, source, yolo_weights, deep_sort_weights, show_vid, save_vid, save_txt, imgsz, evaluate, save_tsv, out_real = \
+    out, source, yolo_weights, deep_sort_weights, show_vid, save_vid, save_txt, imgsz, evaluate, save_tsv, out_real, cp_over = \
         opt.output, opt.source, opt.yolo_weights, opt.deep_sort_weights, opt.show_vid, opt.save_vid, \
-            opt.save_txt, opt.img_size, opt.evaluate, opt.save_tsv, opt.out_real
+            opt.save_txt, opt.img_size, opt.evaluate, opt.save_tsv, opt.out_real, opt.cp_over
     webcam = source == '0' or source.startswith(
         'rtsp') or source.startswith('http') or source.endswith('.txt')
 
@@ -232,11 +232,12 @@ def detect(opt):
         print('Results saved to %s' % os.getcwd() + os.sep + out)
         if platform == 'darwin':  # MacOS
             os.system('open ' + save_path)
-
-    for item in os.listdir(out):
-        s = os.path.join(out, item)
-        d = os.path.join(out_real, item)
-        shutil.copy2(s, d)
+    
+    if cp_over:
+        for item in os.listdir(out):
+            s = os.path.join(out, item)
+            d = os.path.join(out_real, item)
+            shutil.copy2(s, d)
 
     print('Done. (%.3fs)' % (time.time() - t0))
 
@@ -265,6 +266,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--save-tsv', action='store_true', help='save to tsv with labels')
     parser.add_argument('--out-real', type=str, default='inference/output', help='actual folder to save')
+    parser.add_argument('--cp-over', action='store_true', help='copy over from working to output with labels')
 
     args = parser.parse_args()
     args.img_size = check_img_size(args.img_size)
